@@ -5,13 +5,22 @@
 ```bash 
 composer require xiaosongshu/mail
 ```
-
+####   开启smtp服务 并获取授权码
+登录到你的邮箱，设置开启smtp服务。一般在邮箱的设置，账户，smtp里面。
+```html
+<ol>
+    <li>QQ邮箱：https://service.mail.qq.com/detail/0/75</li>
+    <li>网易163邮箱：https://help.mail.163.com/faq.do?m=list&categoryID=90</li>
+    <li>新浪邮箱：https://help.sina.com.cn/comquestiondetail/view/1566/</li>
+    <li>其他...</li>
+</ol>
+```
 ####   发送邮件
 
 ```php 
 /** 发件人 你的邮箱地址 */
 $user = 'xxxxxxx@qq.com';
-/** 发件人授权码 在QQ邮箱的设置，账户，smtp里面 参考：https://blog.csdn.net/weixin_60387745/article/details/129344957 */
+/** 发件人授权码 在邮箱的设置，账户，smtp里面  */
 $password = 'xxxxxxxx';
 /** 邮箱服务器地址 */
 $url = 'smtp.qq.com:25';

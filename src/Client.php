@@ -46,7 +46,7 @@ class Client
     {
         /** 状态码 命令  这里是上一条命令应该返回的状态码，如果状态码不一致 则说明发生了错误 */
         $data = [
-            ['250', 'HELO Estmp'],
+            ['250', 'HELO 0.0.0.0'],
             ['334', 'AUTH LOGIN'],
             /** 登陆邮箱和授权码都必须经过base64加密 */
             ['334', base64_encode($this->user)],
@@ -58,7 +58,7 @@ class Client
             $data[] = ['250', 'MAIL FROM: <' . $this->user . '>'];
             $data[] = ['250', 'RCPT TO: <' . $email . '>'];
             $data[] = ['354', 'DATA', $email . '发送成功'];
-            $data[] = ['250', "Content-Type:Text/html;charset=\"utf-8\"\r\nFrom: {$this->user}\r\nTo: {$email}\r\nSubject:{$title}\r\n{$text}\r\n\r\n."];
+            $data[] = ['250', "Content-Type:Text/html;charset=utf-8\r\nFrom: {$this->user}\r\nTo: {$email}\r\nSubject:{$title}\r\n\r\n{$text}\r\n\r\n."];
         }
         $data[] = ['221', 'QUIT'];
         return $data;
@@ -122,7 +122,6 @@ class Client
                 if ($ready == $this->socket) {
                     $content = fread($ready, 1024);
                     if (!empty($content)) {
-
                         if (strpos($content, $code) === false) {
                             fclose($this->socket);
                             $sockets = [];
