@@ -2,6 +2,12 @@
 
 namespace Xiaosongshu\Mail;
 
+/**
+ * @purpose 邮件发送
+ * @note 支持附件发送，支持超大附件发送
+ * @author xiaosongshu
+ * @time 2023年12月21日18:52:00
+ */
 class Client
 {
     /** 发件人 */
@@ -175,16 +181,37 @@ class Client
             /** 处理可写连接 */
             foreach ($write as $ready) {
                 if ($ready == $this->socket && $message) {
-                    if (false === stream_socket_sendto($this->socket, "{$message}\r\n")) {
-                        fclose($this->socket);
-                        throw new \Exception("发送邮件发生了异常");
-                    } else {
-                        /** 成功发送数据到对方服务器 */
-                        $message = null;
-                        if ($code == '221') {
-                            $sockets = [];
-                            fclose($this->socket);
+                    /** 数据过大，需要分隔发送 */
+                    $flag = true;
+                    /** 起始位置 */
+                    $start = 0;
+                    /** 数据包大小 */
+                    $step = 5000;
+                    /** 循环分隔大数据包 */
+                    while($flag){
+                        /** 兼容中文 */
+                        $smallMessage = @mb_substr($message,$start,$step);
+                        /** 记录指针位置 */
+                        $start = $start + $step;
+                        /** 如果已经分隔完成 */
+                        if (@mb_strlen($smallMessage)<$step){
+                            /** 标记本次数据全部分隔完成 */
+                            $flag = false;
+                            /** 追加结束符 */
+                            $smallMessage .="\r\n";
                         }
+                        //todo 为什么这一定要打印才能发送完整的文件呢 ,可能不能这个直接发送，
+                        var_dump($smallMessage);
+                        /** 强制发送数据到服务端 */
+                        @stream_socket_sendto($this->socket,$smallMessage);
+
+                    }
+                    /** 成功发送数据到对方服务器 */
+                    $message = null;
+                    if ($code == '221') {
+                        $sockets = [];
+
+                        fclose($this->socket);
                     }
                 }
             }
