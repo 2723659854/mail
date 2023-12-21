@@ -1,5 +1,9 @@
-###  发送邮件
+###  邮件发送
 
+
+#### 插件说明
+
+本插件支持批量发送邮件，支持发送附件。
 ####  安装
 
 ```bash 
@@ -24,16 +28,16 @@ $user = 'xxxxxxx@qq.com';
 $password = 'xxxxxxxx';
 /** 邮箱服务器地址 */
 $url = 'smtp.qq.com:25';
+
 try {
     /** 实例化客户端 */
     $client = new \Xiaosongshu\Mail\Client();
     /** 配置服务器地址 ，发件人信息 */
-    $client->config($url,$user,$password);
-    /** 发送邮件 语法：邮件主题 邮件正文 收件人邮箱 */
-    $res = $client->send('测试一下','你知道我是谁吗',['xxxxx@qq.com']);
-    print_r("发送邮件成功");
+    $client->config($url, $user, $password);
+    /** 发送邮件 语法：[收件人邮箱] ,邮件主题, 邮件正文,[附件]  */
+    $res = $client->send( ['xxxx@qq.com'],'标题', '正文呢',[__DIR__.'/favicon.ico',__DIR__.'/favicon2.ico',]);
     print_r($res);
-}catch (Exception $exception){
+} catch (Exception $exception) {
     print_r("发送邮件失败");
     print_r($exception->getMessage());
 }
